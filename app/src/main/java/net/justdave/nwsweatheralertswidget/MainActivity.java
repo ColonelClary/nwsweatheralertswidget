@@ -3,6 +3,11 @@ package net.justdave.nwsweatheralertswidget;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -32,6 +37,33 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Check our doze perms!
+            Log.i(TAG, "I am running Marshmallow or later, about to check perms!");
+            if (checkSelfPermission(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                Log.i(TAG, "I do not currently have Battery Optimization privs.");
+                // Should we show an explanation?
+                if (shouldShowRequestPermissionRationale(
+                        Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) {
+                    // Explain to the user why we need to read the contacts
+                    Log.i(TAG, "Explaining perms to user");
+                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                    alertDialog.setTitle("Battery Optimization");
+                    alertDialog.setMessage(getString(R.string.perms_description));
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                }
+                Log.i(TAG,"Requesting Battery Optimization permissions!");
+
+                requestPermissions(new String[]{Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS}, 1);
+            }
+        }
         handler = new Handler(); // handler will be bound to the current thread
                                  // (UI)
         parsed_events = (ListView) findViewById(R.id.parsed_events);
