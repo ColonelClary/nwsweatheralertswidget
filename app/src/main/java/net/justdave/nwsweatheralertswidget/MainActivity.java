@@ -7,6 +7,8 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,22 +36,35 @@ public class MainActivity extends Activity {
     ListView parsed_events;
 
     @Override
+    public void onRequestPermissionsResult (int requestCode,
+                                     String[] permissions,
+                                     int[] grantResults) {
+        Log.i(TAG, "I got a callback!");
+        if (grantResults.equals(PackageManager.PERMISSION_DENIED)) {
+            Log.i(TAG, "Permission was denied!");
+        }
+        else {
+            Log.i(TAG, "Permission was granted!");
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Check our doze perms!
             Log.i(TAG, "I am running Marshmallow or later, about to check perms!");
-            if (checkSelfPermission(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-                    != PackageManager.PERMISSION_GRANTED) {
+            if (true) { //if (ContextCompat.checkSelfPermission(this, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                    // != PackageManager.PERMISSION_GRANTED) {
                 Log.i(TAG, "I do not currently have Battery Optimization privs.");
                 // Should we show an explanation?
-                if (shouldShowRequestPermissionRationale(
-                        Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) {
+                if (true) { //if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        // Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) {
                     // Explain to the user why we need to read the contacts
                     Log.i(TAG, "Explaining perms to user");
                     AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                    alertDialog.setTitle("Battery Optimization");
+                    alertDialog.setTitle(getString(R.string.perms_title));
                     alertDialog.setMessage(getString(R.string.perms_description));
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                             new DialogInterface.OnClickListener() {
@@ -61,8 +76,12 @@ public class MainActivity extends Activity {
                 }
                 Log.i(TAG,"Requesting Battery Optimization permissions!");
 
-                requestPermissions(new String[]{Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS}, 1);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS}, 1);
+            } else {
+                Log.i(TAG, "I appear to already have Battery Optimization perms.");
             }
+            //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS}, 1);
+
         }
         handler = new Handler(); // handler will be bound to the current thread
                                  // (UI)

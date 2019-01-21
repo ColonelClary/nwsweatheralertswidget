@@ -14,7 +14,8 @@
          icons or background colors.  The NWS Logo on a gray background is the default used
          if nothing else has been set. Please visit
          https://github.com/justdave/nwsweatheralertswidget/issues to suggest icons or colors.</string>
-    <string name="perms_description">Some text explaining DOZE goes here.</string>
+    <string name="perms_title">Battery Optimization</string>
+    <string name="perms_description">Android attempts to put processes to sleep after your phone is idle to save battery. This will cause the widget to fail to pick up new warnings unless permission in granted to ignore Battery Optimization.</string>
     <string name="icon">Icon</string>
     <string name="ok">OK</string>
     <string name="alert_title">Widget Loading</string>

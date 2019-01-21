@@ -82,7 +82,7 @@ class NWSRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
             if (api == null) {
                 Log.w(TAG, "We don't appear to be connected to the background service yet... waiting for connection");
                 // attempt to re-bind - it won't hurt anything, and will kick it if it stalled
-                Intent intent = new Intent(NWSBackgroundService.class.getName());;
+                Intent intent = new Intent(mContext, NWSBackgroundService.class);;
                 mContext.bindService(intent, serviceConnection, 0);
             }
             // and then wait for it to connect before continuing - I'm guessing this will hang if it never connects,
